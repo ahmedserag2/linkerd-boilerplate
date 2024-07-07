@@ -1,0 +1,13 @@
+replicaCount: 1
+
+image:
+  repository: 01447/serviceb
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 3000
+
+env:
+  port: 3000

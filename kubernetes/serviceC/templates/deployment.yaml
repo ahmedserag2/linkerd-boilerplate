@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "servicec.fullname" . }}
+  labels:
+    app: {{ include "servicec.name" . }}
+    chart: {{ include "servicec.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "servicec.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "servicec.name" . }}
+        release: {{ .Release.Name }}
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: PORT
+          value: "{{ .Values.env.port }}"
+        ports:
+        - containerPort: {{ .Values.env.port }}
+        args: ["node", "serviceC.js"]

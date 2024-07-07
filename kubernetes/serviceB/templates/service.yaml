@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "serviceb.fullname" . }}
+  labels:
+    app: {{ include "serviceb.name" . }}
+    chart: {{ include "serviceb.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: 3000
+    targetPort: {{ .Values.env.port }}
+    protocol: TCP
+    name: http
+  selector:
+    app: {{ include "serviceb.name" . }}
+    release: {{ .Release.Name }}
